@@ -19,7 +19,7 @@ public sealed class CathodeRayTube : AdventOfCodeChallenge
 
     public override string SolvePart1()
     {
-        var cycleCount = 1;
+        var cycleCount = 0;
         var xRegister = 1;
 
         var signalStrengthSum = 0;
@@ -28,12 +28,13 @@ public sealed class CathodeRayTube : AdventOfCodeChallenge
         {
             do
             {
+                cycleCount++;
+
                 if (cycleCount is 20 or 60 or 100 or 140 or 180 or 220)
                 {
                     signalStrengthSum += cycleCount * xRegister;
                 }
                     
-                cycleCount++;
                     
             } while (!instruction.TryComplete(ref xRegister));
         }
