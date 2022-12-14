@@ -56,6 +56,9 @@ public sealed class CathodeRayTube : AdventOfCodeChallenge
         {
             do
             {
+                if (cycleCount >= crt.TotalLength)
+                    break;
+                
                 var beamPosition = ToPoint(cycleCount);
                 var spritePosition = ToPoint(xRegister);
                 
@@ -69,9 +72,9 @@ public sealed class CathodeRayTube : AdventOfCodeChallenge
                 {
                     crt[beamPosition.X, beamPosition.Y] = '.';
                 }
-
+                
                 cycleCount++;
-                    
+                
             } while (!instruction.TryComplete(ref xRegister));
         }
 
