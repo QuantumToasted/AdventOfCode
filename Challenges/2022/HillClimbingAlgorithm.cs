@@ -30,24 +30,25 @@ public sealed class HillClimbingAlgorithm : AdventOfCodeChallenge
         var s = _map.Single(x => x.Height == 'S');
         var e = _map.Single(x => x.Height == 'E');
 
-        var list = new HashSet<Path>();
+        var paths = new HashSet<Path>();
 
         var path = new Path(new[] {s}.ToList());
+
+        paths.Add(path);
 
         _map.Print(true);
         
         Traverse(path);
 
-        foreach (var p in list.Where(x => x.VisitedPoints[^1].Equals(e)))
+        foreach (var p in paths.Where(x => x.VisitedPoints[^1].Equals(e)))
         {
             _map.Print(true, p.VisitedPoints.Select(x => (x.Location, ConsoleColor.Green)).ToArray());
             Console.WriteLine($"Length: {p.Length}");
             Console.ReadKey();
         }
 
-        return $"Shortest path is {list.Where(x => x.VisitedPoints[^1].Equals(e)).MinBy(x => x.Length).Length} steps.";
+        return $"Shortest path is {paths.Where(x => x.VisitedPoints[^1].Equals(e)).MinBy(x => x.Length).Length} steps.";
         
-        // list is a list of paths, which starts with one path, starting from S
         void Traverse(Path currentPath)
         {
             var current = currentPath.VisitedPoints[^1];
@@ -69,7 +70,7 @@ public sealed class HillClimbingAlgorithm : AdventOfCodeChallenge
                 // problem line #1
 
                 var currentPathLength = p.Length;
-                if (list.Any(x =>
+                if (paths.Any(x =>
                     {
                         var length = x.StepsTo(neighbor);
                         // is there a shorter path to this neighbor?
@@ -82,7 +83,7 @@ public sealed class HillClimbingAlgorithm : AdventOfCodeChallenge
                 // problem line #2?
                 // currentPath.VisitedPoints.Add(neighbor);
 
-                list.Add(p);
+                paths.Add(p);
                 
                 //Console.SetCursorPosition(position.Left, position.Top);
                 //Console.WriteLine(list.Count);
