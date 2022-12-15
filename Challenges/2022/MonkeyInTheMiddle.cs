@@ -54,6 +54,9 @@ public sealed class MonkeyInTheMiddle : AdventOfCodeChallenge
 
     public override string SolvePart2()
     {
+        // re-load data to reset items and items inspected
+        LoadData();
+        
         const int roundCount = 10_000;
 
         // the limit is the LCM of all monkeys' divisors (which just so happen to be prime)
@@ -88,12 +91,6 @@ public sealed class MonkeyInTheMiddle : AdventOfCodeChallenge
                     }
                 }
             }
-        }
-
-        for (var i = 0; i < _monkeys.Count; i++)
-        {
-            var monkey = _monkeys[i];
-            Log.Information("Monkey {Index} inspected {Count} items.", i, monkey.ItemsInspected);
         }
 
         var monkeyBusinessLevel = _monkeys.OrderByDescending(x => x.ItemsInspected).Take(2)
