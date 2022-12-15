@@ -62,28 +62,29 @@ public sealed class HillClimbingAlgorithm : AdventOfCodeChallenge
                 if (neighbor.Equals(s)) // special case. don't go right back to start idiot
                     continue;
 
-                if (neighbor.IsTheTop)
-                {
-                    return;
-                }
-
                 // problem line #1
 
                 var currentPathLength = p.Length;
                 if (paths.Any(x =>
                     {
                         var length = x.StepsTo(neighbor);
-                        // is there a shorter path to this neighbor?
+                        // is there a shorter or equal path to this neighbor?
                         return length > 0 && length <= currentPathLength;
                     }))
                 {
                     continue;
                 }
+                
+                paths.Add(p);
+                
+                if (neighbor.Equals(e))
+                {
+                    return;
+                }
 
                 // problem line #2?
                 // currentPath.VisitedPoints.Add(neighbor);
 
-                paths.Add(p);
                 
                 //Console.SetCursorPosition(position.Left, position.Top);
                 //Console.WriteLine(list.Count);
