@@ -30,79 +30,84 @@ public sealed class HillClimbingAlgorithm : AdventOfCodeChallenge
         var s = _map.Single(x => x.Height == 'S');
         var e = _map.Single(x => x.Height == 'E');
 
-        var paths = new HashSet<Path>();
+        var queue = new Queue<HeightPoint>(new[] {s});
 
-        var path = new Path(new[] {s}.ToList());
+        var previous = new Dictionary<HeightPoint, HeightPoint>();
 
-        paths.Add(path);
-
-        _map.Print(true);
-        
-        Traverse(path);
-
-        foreach (var p in paths.Where(x => x.VisitedPoints[^1].Equals(e)))
+        while (queue.TryDequeue(out var point))
         {
-            _map.Print(true, p.VisitedPoints.Select(x => (x.Location, ConsoleColor.Green)).ToArray());
-            Console.WriteLine($"Length: {p.Length}");
-            Console.ReadKey();
-        }
-
-        return $"Shortest path is {paths.Where(x => x.VisitedPoints[^1].Equals(e)).MinBy(x => x.Length).Length} steps.";
-        
-        void Traverse(Path currentPath)
-        {
-            var current = currentPath.VisitedPoints[^1];
-            
-            var neighbors = _map.GetCartesianNeighbors(current, p => current.CanTravelTo(p.Height));
-
-            foreach (var neighbor in neighbors)
+            foreach (var neighbor in _map.GetCartesianNeighbors(point, x => point.CanTravelTo(x.Height)))
             {
-                var p = new Path(currentPath.VisitedPoints.Append(neighbor).ToList());
-                
-                if (neighbor.Equals(s)) // special case. don't go right back to start idiot
+                if (previous.ContainsKey(neighbor))
                     continue;
 
-                // problem line #1
-
-                var currentPathLength = p.Length;
-                if (paths.Any(x =>
-                    {
-                        var length = x.StepsTo(neighbor);
-                        // is there a shorter or equal path to this neighbor?
-                        return length > 0 && length <= currentPathLength;
-                    }))
-                {
-                    continue;
-                }
-                
-                paths.Add(p);
-                
-                if (neighbor.Equals(e))
-                {
-                    return;
-                }
-
-                // problem line #2?
-                // currentPath.VisitedPoints.Add(neighbor);
-
-                
-                //Console.SetCursorPosition(position.Left, position.Top);
-                //Console.WriteLine(list.Count);
-                //var tempPosition = Console.GetCursorPosition();
-                //Console.WriteLine("\n\n\n\n\n\n\n\n\n\n");
-                //Console.SetCursorPosition(tempPosition.Left, tempPosition.Top);
-                //Console.Write(currentPath);
-
-                _map.PrintFast(currentPath.VisitedPoints.Select(x => (x.Location, ConsoleColor.Red)).ToArray());
-
-                Traverse(p);
+                previous[neighbor] = point;
+                queue.Enqueue(neighbor);
             }
         }
+
+        var path = new Path(new List<HeightPoint>());
+        var current = e;
+        while (!current.Equals(s))
+        {
+            path.VisitedPoints.Add(current);
+            current = previous[current];
+        }
+        
+        path.VisitedPoints.Add(s);
+
+        path.VisitedPoints.Reverse();
+
+        _map.Print(true, path.VisitedPoints.Select(x => (x.Location, ConsoleColor.Green)).ToArray());
+
+        return $"The shortest possible path from S to E is {path.Length} steps.";
     }
 
     public override string SolvePart2()
     {
-        return string.Empty;
+        var e = _map.Single(x => x.Height == 'E');
+
+        var paths = new List<Path>();
+
+        foreach (var p in _map.Where(x => x.Height is 'a' or 'S'))
+        {
+            var queue = new Queue<HeightPoint>(new[] {p});
+            var previous = new Dictionary<HeightPoint, HeightPoint>();
+            while (queue.TryDequeue(out var point))
+            {
+                foreach (var neighbor in _map.GetCartesianNeighbors(point, x => point.CanTravelTo(x.Height)))
+                {
+                    if (previous.ContainsKey(neighbor))
+                        continue;
+
+                    previous[neighbor] = point;
+                    queue.Enqueue(neighbor);
+                }
+            }
+            
+            // skip to the next point if the path DOES NOT lead to the summit
+            if (!previous.ContainsKey(e))
+                continue;
+
+            var path = new Path(new List<HeightPoint>());
+            var current = e;
+            while (!current.Equals(p))
+            {
+                path.VisitedPoints.Add(current);
+                current = previous[current];
+            }
+        
+            path.VisitedPoints.Add(p);
+            path.VisitedPoints.Reverse();
+            
+            paths.Add(path);
+        }
+
+        var shortestPath = paths.MinBy(x => x.Length);
+
+        _map.Print(true, shortestPath.VisitedPoints.Select(x => (x.Location, ConsoleColor.Green)).ToArray());
+
+        return $"The shortest possible path from any a-height point to E is {shortestPath.Length} steps.";
     }
 
     private readonly record struct Path(List<HeightPoint> VisitedPoints)
@@ -133,11 +138,11 @@ public sealed class HillClimbingAlgorithm : AdventOfCodeChallenge
         public bool CanTravelTo(char otherHeight)
         {
             if (otherHeight == 'E')
-                return Height == 'z';
+                return Height is 'z' or 'y';
 
-            if (otherHeight is 'a' or 'b' && Height == 'S')
+            if (otherHeight is 'a' or 'b' && Height is 'S')
                 return true;
-
+            
             return otherHeight - Height <= 1;
         }
 

@@ -126,8 +126,9 @@ public class Graph<T> : IEnumerable<T>
 
                 builder.AppendLine();
             }
-        
-            Console.WriteLine(builder.ToString());
+            
+            if (builder.Length > 0)
+                Console.WriteLine(builder.ToString());
         }
 
         /*
