@@ -81,10 +81,7 @@ public sealed class Trebuchet : AdventOfCodeChallenge
                     lastNumber = digit;
                 }
 
-                var number = firstNumber * 10 + lastNumber; // 5, 3 => 53
-                Log.Information("RawValue: {Value} Value: {Number}", RawValue, number);
-
-                return number;
+                return firstNumber * 10 + lastNumber; // 5, 3 => 53;
 
                 static bool TryReadDigit(ReadOnlySpan<char> rawValue, int i, out int digit)
                 {
