@@ -4,12 +4,12 @@ namespace AdventOfCode.Common;
 
 public abstract class AdventOfCodeChallenge
 {
-    public static readonly IReadOnlyDictionary<(int Year, int Day), Type> ExistingChallenges = typeof(AdventOfCodeChallenge).Assembly.GetTypes()
+    public static readonly IReadOnlyDictionary<DateOnly, Type> ExistingChallenges = typeof(AdventOfCodeChallenge).Assembly.GetTypes()
         .Where(x => !x.IsAbstract && typeof(AdventOfCodeChallenge).IsAssignableFrom(x))
         .ToDictionary(x =>
         {
             var attribute = x.GetCustomAttribute<ChallengeAttribute>()!;
-            return (attribute.Year, attribute.Day);
+            return new DateOnly(attribute.Year, 12, attribute.Day);
         });
     
     private protected readonly string _input;
@@ -61,7 +61,7 @@ public abstract class AdventOfCodeChallenge
 
     public static AdventOfCodeChallenge? Find(int year, int day)
     {
-        if (!ExistingChallenges.TryGetValue((year, day), out var type)
+        if (!ExistingChallenges.TryGetValue(new DateOnly(year, 12, day), out var type)
             || Activator.CreateInstance(type) is not AdventOfCodeChallenge challenge)
         {
             return null;

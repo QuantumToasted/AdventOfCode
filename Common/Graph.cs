@@ -20,6 +20,12 @@ public class Graph<T> : IEnumerable<T>
         _arr = arr;
     }
 
+    public T this[Point p]
+    {
+        get => _arr[p.X, p.Y];
+        set => _arr[p.X, p.Y] = value;
+    }
+
     public T this[int x, int y]
     {
         get => _arr[x, y];
@@ -91,6 +97,28 @@ public class Graph<T> : IEnumerable<T>
     public int GetLength(GraphDimension dimension)
         => _arr.GetLength((int) dimension);
 
+    public void Fill(T value)
+    {
+        for (var x = 0; x < _arr.GetLength(0); x++)
+        {
+            for (var y = 0; y < _arr.GetLength(1); y++)
+            {
+                _arr[x, y] = value;
+            }
+        }
+    }
+    
+    public void Fill(Func<Point, T> valueFactory)
+    {
+        for (var x = 0; x < _arr.GetLength(0); x++)
+        {
+            for (var y = 0; y < _arr.GetLength(1); y++)
+            {
+                _arr[x, y] = valueFactory(new Point(x, y));
+            }
+        }
+    }
+
     public void Print(bool writeOver, params (Point Point, ConsoleColor Color)[] highlightedPoints)
     {
         if (writeOver)
@@ -129,6 +157,8 @@ public class Graph<T> : IEnumerable<T>
             
             if (builder.Length > 0)
                 Console.WriteLine(builder.ToString());
+            
+            Console.SetCursorPosition(0, 0);
         }
 
         /*

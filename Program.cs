@@ -1,5 +1,4 @@
-﻿using AdventOfCode;
-using AdventOfCode.Common;
+﻿using AdventOfCode.Common;
 using Serilog;
 using Serilog.Events;
 
@@ -26,10 +25,10 @@ foreach (var yearGroup in AdventOfCodeChallenge.ExistingChallenges.Keys.OrderByD
         string.Join(", ", yearGroup.Select(x => x.Day).Order().Select(x => x.ToString("00"))));
 }
 
-Log.Information("Valid inputs: \"[t]oday\", \"[l]atest\", \"2022 03\", \"03\"");
+Log.Information("Valid inputs: \"[t]oday\", \"[l]atest\", \"2023 03\", \"03\"");
 Log.Information("Default (no input): latest");
 
-var input = Console.ReadLine();
+var input = Console.ReadLine()?.ToLower();
 if (string.IsNullOrWhiteSpace(input) || input is "l" or "latest")
 {
     challenge = AdventOfCodeChallenge.Latest;
