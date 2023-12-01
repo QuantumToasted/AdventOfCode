@@ -71,7 +71,7 @@ public sealed class Trebuchet : AdventOfCodeChallenge
                     var digit = (int) char.GetNumericValue(RawValue[i]);
                     if (digit == -1)
                     {
-                        if (!TryReadDigit(RawValue, ref i, out digit))
+                        if (!TryReadDigit(RawValue, i, out digit))
                             continue;
                     }
 
@@ -86,7 +86,7 @@ public sealed class Trebuchet : AdventOfCodeChallenge
 
                 return number;
 
-                static bool TryReadDigit(ReadOnlySpan<char> rawValue, ref int i, out int digit)
+                static bool TryReadDigit(ReadOnlySpan<char> rawValue, int i, out int digit)
                 {
                     digit = default;
 
@@ -102,7 +102,6 @@ public sealed class Trebuchet : AdventOfCodeChallenge
                         if (slice.SequenceEqual(number))
                         {
                             digit = value;
-                            i += number.Length - 1; // i is incremented in the outer loop, don't increment the full length
                             return true;
                         }
                     }
