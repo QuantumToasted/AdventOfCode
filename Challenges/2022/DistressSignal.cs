@@ -1,11 +1,8 @@
-using System.Collections;
 using System.Text;
-using AdventOfCode.Common;
 
-namespace AdventOfCode.Challenges;
+namespace AdventOfCode;
 
-[Challenge("Distress Signal", 2022, 13)]
-public sealed class DistressSignal : AdventOfCodeChallenge
+public sealed class DistressSignal() : AdventOfCodeChallenge("Distress Signal", 2022, 13)
 {
     private ICollection<(IPacketValue Left, IPacketValue Right)> _part1PacketPairs = null!;
     private ICollection<IPacketValue> _part2SortedPackets = null!;
@@ -57,7 +54,7 @@ public sealed class DistressSignal : AdventOfCodeChallenge
         string Format();
     }
 
-    private readonly record struct IntegerPacketValue(int Value) : IPacketValue
+    private sealed record IntegerPacketValue(int Value) : IPacketValue
     {
         public string Format()
             => Value.ToString();
@@ -77,7 +74,7 @@ public sealed class DistressSignal : AdventOfCodeChallenge
         }
     }
 
-    private readonly record struct ListPacketValue(ICollection<IPacketValue> Values) : IPacketValue
+    private sealed record ListPacketValue(ICollection<IPacketValue> Values) : IPacketValue
     {
         public string Format()
             => $"[{string.Join(',', Values.Select(x => x.Format()))}]";

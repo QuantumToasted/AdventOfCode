@@ -1,9 +1,6 @@
-﻿using AdventOfCode.Common;
+﻿namespace AdventOfCode;
 
-namespace AdventOfCode.Challenges;
-
-[Challenge("Camp Cleanup", 2022, 04)]
-public sealed class CampCleanup : AdventOfCodeChallenge
+public sealed class CampCleanup() : AdventOfCodeChallenge("Camp Cleanup", 2022, 04)
 {
     private IReadOnlyCollection<(CleanupAssignment FirstElf, CleanupAssignment SecondElf)> _elfPairs = null!;
 
@@ -46,7 +43,7 @@ public sealed class CampCleanup : AdventOfCodeChallenge
         return $"The number of elf pairs whose area overlaps is {overlappingPairCount}.";
     }
 
-    private readonly record struct CleanupAssignment(int StartingSectionId, int EndingSectionId)
+    private sealed record CleanupAssignment(int StartingSectionId, int EndingSectionId)
     {
         public int[] AssignedSections => Enumerable.Range(StartingSectionId, (EndingSectionId - StartingSectionId) + 1).Select(x => x).ToArray();
 

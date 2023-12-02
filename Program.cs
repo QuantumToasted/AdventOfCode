@@ -1,4 +1,4 @@
-﻿using AdventOfCode.Common;
+﻿using AdventOfCode;
 using Serilog;
 using Serilog.Events;
 
@@ -15,7 +15,7 @@ if (AdventOfCodeChallenge.ExistingChallenges.Count == 0)
 {
     Log.Fatal("No available challenges.");
     Console.ReadLine();
-    Environment.Exit(-1);
+    return -1;
 }
 
 Log.Information("Available challenges: ");
@@ -55,8 +55,8 @@ else
     {
         Log.Warning("Invalid input. Defaulting to \"latest\" challenge.");
         challenge = AdventOfCodeChallenge.Latest;
-        year = challenge?.Year ?? DateTimeOffset.Now.Year;
-        day = challenge?.Day ?? DateTimeOffset.Now.Day;
+        year = challenge?.Date.Year ?? DateTimeOffset.Now.Year;
+        day = challenge?.Date.Year ?? DateTimeOffset.Now.Day;
     }
     
     Log.Information("Selected challenge from year {Year}, day {Day}.", year, day);
@@ -74,7 +74,7 @@ if (challenge is null)
     }
     
     Console.ReadLine();
-    Environment.Exit(-1);
+    return -1;
 }
 
 try
@@ -87,7 +87,7 @@ catch (Exception ex)
 {
     Log.Fatal(ex, "Failed to load data!");
     Console.ReadLine();
-    Environment.Exit(-1);
+    return -1;
 }
 
 Log.Information("Running challenge {Challenge}:", challenge.Name);
@@ -102,7 +102,7 @@ catch (Exception ex)
 {
     Log.Fatal(ex, "Failed to run part 1!");
     Console.ReadLine();
-    Environment.Exit(-1);
+    return -1;
 }
 
 try
@@ -115,7 +115,8 @@ catch (Exception ex)
 {
     Log.Fatal(ex, "Failed to run part 2!");
     Console.ReadLine();
-    Environment.Exit(-1);
+    return -1;
 }
 
 Console.ReadLine();
+return 0;

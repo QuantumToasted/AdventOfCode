@@ -1,9 +1,6 @@
-﻿using AdventOfCode.Common;
+﻿namespace AdventOfCode;
 
-namespace AdventOfCode.Challenges;
-
-[Challenge("Tuning Trouble", 2022, 06)]
-public sealed class TuningTrouble : AdventOfCodeChallenge
+public sealed class TuningTrouble() : AdventOfCodeChallenge("Tuning Trouble", 2022, 06)
 {
     public override void LoadData()
     { }

@@ -1,10 +1,8 @@
 using System.Drawing;
-using AdventOfCode.Common;
 
-namespace AdventOfCode.Challenges;
+namespace AdventOfCode;
 
-[Challenge("Hill Climbing Algorithm", 2022, 12)]
-public sealed class HillClimbingAlgorithm : AdventOfCodeChallenge
+public sealed class HillClimbingAlgorithm() : AdventOfCodeChallenge("Hill Climbing Algorithm", 2022, 12)
 {
     private Graph<HeightPoint> _map = null!;
     
@@ -105,12 +103,12 @@ public sealed class HillClimbingAlgorithm : AdventOfCodeChallenge
 
         var shortestPath = paths.MinBy(x => x.Length);
 
-        _map.Print(true, shortestPath.VisitedPoints.Select(x => (x.Location, ConsoleColor.Green)).ToArray());
+        _map.Print(true, shortestPath!.VisitedPoints.Select(x => (x.Location, ConsoleColor.Green)).ToArray());
 
         return $"The shortest possible path from any a-height point to E is {shortestPath.Length} steps.";
     }
 
-    private readonly record struct Path(List<HeightPoint> VisitedPoints)
+    private sealed record Path(List<HeightPoint> VisitedPoints)
     {
         //public List<HeightPoint> VisitedPoints { get; } = new();
 
@@ -119,8 +117,8 @@ public sealed class HillClimbingAlgorithm : AdventOfCodeChallenge
         public int StepsTo(HeightPoint point)
          => VisitedPoints.IndexOf(point)/* + 1*/; // no + 1, see Length
         
-        public bool Equals(Path other)
-            => other.VisitedPoints.SequenceEqual(VisitedPoints);
+        public bool Equals(Path? other)
+            => other?.VisitedPoints.SequenceEqual(VisitedPoints) == true;
 
         public override int GetHashCode()
             => VisitedPoints.GetHashCode();

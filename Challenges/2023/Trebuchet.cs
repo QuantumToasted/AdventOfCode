@@ -1,10 +1,6 @@
-using AdventOfCode.Common;
-using Serilog;
+namespace AdventOfCode;
 
-namespace AdventOfCode.Challenges;
-
-[Challenge("Trebuchet?!", 2023, 01)]
-public sealed class Trebuchet : AdventOfCodeChallenge
+public sealed class Trebuchet() : AdventOfCodeChallenge("Trebuchet?!", 2023, 01)
 {
     private static readonly IReadOnlyDictionary<string, int> NumberNames = new Dictionary<string, int>
     {

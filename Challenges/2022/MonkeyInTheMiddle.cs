@@ -1,10 +1,6 @@
-using AdventOfCode.Common;
-using Serilog;
+namespace AdventOfCode;
 
-namespace AdventOfCode.Challenges;
-
-[Challenge("Monkey in the Middle", 2022, 11)]
-public sealed class MonkeyInTheMiddle : AdventOfCodeChallenge
+public sealed class MonkeyInTheMiddle() : AdventOfCodeChallenge("Monkey in the Middle", 2022, 11)
 {
     private IList<Monkey> _monkeys = null!;
     
@@ -99,7 +95,7 @@ public sealed class MonkeyInTheMiddle : AdventOfCodeChallenge
         return $"The level of monkey business after {roundCount} rounds is {monkeyBusinessLevel}.";
     }
     
-    private record Monkey(Queue<long> Items, Func<long, long> Operation, int Divisor, int TrueMonkeyIndex, int FalseMonkeyIndex)
+    private sealed record Monkey(Queue<long> Items, Func<long, long> Operation, int Divisor, int TrueMonkeyIndex, int FalseMonkeyIndex)
     {
         public int ItemsInspected { get; set; }
 

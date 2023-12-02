@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Text;
 
-namespace AdventOfCode.Common;
+namespace AdventOfCode;
 
 public enum GraphDimension
 {
@@ -10,15 +10,10 @@ public enum GraphDimension
     Y
 }
 
-public class Graph<T> : IEnumerable<T>
+public sealed class Graph<T>(T[,] arr) : IEnumerable<T>
     where T : struct
 {
-    private readonly T[,] _arr;
-
-    public Graph(T[,] arr)
-    {
-        _arr = arr;
-    }
+    private readonly T[,] _arr = arr;
 
     public T this[Point p]
     {

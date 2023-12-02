@@ -1,12 +1,9 @@
 using System.Drawing;
 using System.Text;
-using AdventOfCode.Common;
-using Serilog;
 
-namespace AdventOfCode.Challenges;
+namespace AdventOfCode;
 
-[Challenge("Regolith Reservoir", 2022, 14)]
-public sealed class RegolithReservoir : AdventOfCodeChallenge
+public sealed class RegolithReservoir() : AdventOfCodeChallenge("Regolith Reservoir", 2022, 14)
 {
     private static readonly Point SandInitialPosition = new(500, 0);
     
@@ -74,7 +71,7 @@ public sealed class RegolithReservoir : AdventOfCodeChallenge
         return $"The number of grains of sand which come to rest before the source is plugged is {sandAtRest}.";
     }
 
-    private record Cave
+    private sealed record Cave
     {
         public Dictionary<Point, Material> CollisionMap { get; } = new();
         
@@ -161,7 +158,7 @@ public sealed class RegolithReservoir : AdventOfCodeChallenge
         }
     }
 
-    private readonly record struct CaveRockFormation(Point[] DrawPoints)
+    private sealed record CaveRockFormation(Point[] DrawPoints)
     {
         public void Form(Cave cave)
         {

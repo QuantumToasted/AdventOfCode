@@ -1,10 +1,8 @@
 using System.Drawing;
-using AdventOfCode.Common;
 
-namespace AdventOfCode.Challenges;
+namespace AdventOfCode;
 
-[Challenge("Rope Bridge", 2022, 09)]
-public sealed class RopeBridge : AdventOfCodeChallenge
+public sealed class RopeBridge() : AdventOfCodeChallenge("Rope Bridge", 2022, 09)
 {
     private ICollection<RopeHeadMovement> _movements = null!;
 
@@ -89,7 +87,7 @@ public sealed class RopeBridge : AdventOfCodeChallenge
         return $"The tail of the rope visited {visitedPoints.Count} unique points.";
     }
 
-    private readonly record struct RopeSection(int X, int Y)
+    private sealed record RopeSection(int X, int Y)
     {
         public RopeSection Follow(RopeSection head)
         {
@@ -114,7 +112,7 @@ public sealed class RopeBridge : AdventOfCodeChallenge
         public static implicit operator Point(RopeSection section) => new(section.X, section.Y);
     }
 
-    private readonly record struct RopeHeadMovement(RopeMoveDirection Direction, int Amount)
+    private sealed record RopeHeadMovement(RopeMoveDirection Direction, int Amount)
     {
         public static RopeHeadMovement Parse(string input)
         {

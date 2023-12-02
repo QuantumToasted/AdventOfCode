@@ -1,9 +1,6 @@
-﻿using AdventOfCode.Common;
+﻿namespace AdventOfCode;
 
-namespace AdventOfCode.Challenges;
-
-[Challenge("Calorie Counting", 2022, 01)]
-public sealed class CalorieCounting : AdventOfCodeChallenge
+public sealed class CalorieCounting() : AdventOfCodeChallenge("Calorie Counting", 2022, 01)
 {
     private IReadOnlyCollection<ElfCalorieCollection> _elves = null!;
 
@@ -27,7 +24,7 @@ public sealed class CalorieCounting : AdventOfCodeChallenge
         return $"The three elves with the most calories are carrying a combined {maxCalorieElves.Sum(x => x.Sum)} calories worth of food.";
     }
 
-    private readonly record struct ElfCalorieCollection(int[] CalorieGroups)
+    private sealed record ElfCalorieCollection(int[] CalorieGroups)
     {
         public int Sum => CalorieGroups.Sum(x => x);
     }

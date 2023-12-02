@@ -1,14 +1,11 @@
 using System.Collections.Concurrent;
 using System.Drawing;
-using System.Numerics;
 using System.Text.RegularExpressions;
-using AdventOfCode.Common;
 using Serilog;
 
-namespace AdventOfCode.Challenges;
+namespace AdventOfCode;
 
-[Challenge("Beacon Exclusion Zone", 2022, 15)]
-public sealed class BeaconExclusionZone : AdventOfCodeChallenge
+public sealed class BeaconExclusionZone() : AdventOfCodeChallenge("Beacon Exclusion Zone", 2022, 15)
 {
     private ICollection<Sensor> _sensors = null!;
 
@@ -108,7 +105,7 @@ public sealed class BeaconExclusionZone : AdventOfCodeChallenge
     private static int ManhattanDistance(Point point1, Point point2)
         => Math.Abs(point1.X - point2.X) + Math.Abs(point1.Y - point2.Y);
 
-    private readonly record struct Sensor(Point Position, Point NearestBeaconPosition)
+    private sealed record Sensor(Point Position, Point NearestBeaconPosition)
     {
         private static readonly Regex SensorParseRegex = new(
             @"Sensor at x=(-?[\d]+), y=(-?[\d]+): closest beacon is at x=(-?[\d]+), y=(-?[\d]+)", RegexOptions.Compiled);

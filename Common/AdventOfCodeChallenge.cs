@@ -1,35 +1,17 @@
-﻿using System.Reflection;
+﻿namespace AdventOfCode;
 
-namespace AdventOfCode.Common;
-
-public abstract class AdventOfCodeChallenge
+public abstract class AdventOfCodeChallenge(string name, int year, int day)
 {
-    public static readonly IReadOnlyDictionary<DateOnly, Type> ExistingChallenges = typeof(AdventOfCodeChallenge).Assembly.GetTypes()
+    public static readonly IReadOnlyDictionary<DateOnly, AdventOfCodeChallenge> ExistingChallenges = typeof(AdventOfCodeChallenge).Assembly.GetTypes()
         .Where(x => !x.IsAbstract && typeof(AdventOfCodeChallenge).IsAssignableFrom(x))
-        .ToDictionary(x =>
-        {
-            var attribute = x.GetCustomAttribute<ChallengeAttribute>()!;
-            return new DateOnly(attribute.Year, 12, attribute.Day);
-        });
+        .Select(x => (AdventOfCodeChallenge)Activator.CreateInstance(x)!)
+        .ToDictionary(x => x.Date);
     
-    private protected readonly string _input;
+    private protected readonly string _input = File.ReadAllText($"Inputs/{year}/day{day:00}.txt");
 
-    protected AdventOfCodeChallenge()
-    {
-        var attribute = GetType().GetCustomAttribute<ChallengeAttribute>()!;
-        
-        _input = File.ReadAllText($"Inputs/{attribute.Year}/day{attribute.Day:00}.txt");
-
-        Year = attribute.Year;
-        Day = attribute.Day;
-        Name = attribute.Name;
-    }
+    public string Name { get; } = name;
     
-    public int Year { get; }
-    
-    public int Day { get; }
-
-    public string Name { get; }
+    public DateOnly Date { get; } = new(year, 12, day);
 
     public abstract void LoadData();
 
@@ -60,13 +42,5 @@ public abstract class AdventOfCodeChallenge
         => Find(DateTimeOffset.Now.Year, day);
 
     public static AdventOfCodeChallenge? Find(int year, int day)
-    {
-        if (!ExistingChallenges.TryGetValue(new DateOnly(year, 12, day), out var type)
-            || Activator.CreateInstance(type) is not AdventOfCodeChallenge challenge)
-        {
-            return null;
-        }
-
-        return challenge;
-    }
+        => ExistingChallenges.GetValueOrDefault(new DateOnly(year, 12, day));
 }

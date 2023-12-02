@@ -1,9 +1,6 @@
-﻿using AdventOfCode.Common;
+﻿namespace AdventOfCode;
 
-namespace AdventOfCode.Challenges;
-
-[Challenge("Rock Paper Scissors", 2022, 02)]
-public sealed class RockPaperScissors : AdventOfCodeChallenge
+public sealed class RockPaperScissors() : AdventOfCodeChallenge("Rock Paper Scissors", 2022, 02)
 {
     private IReadOnlyCollection<RockPaperScissorsOutcome> _part1Outcomes = null!;
     private IReadOnlyCollection<RockPaperScissorsOutcome> _part2Outcomes = null!;
@@ -46,7 +43,7 @@ public sealed class RockPaperScissors : AdventOfCodeChallenge
         Scissors = 3
     }
 
-    private readonly record struct RockPaperScissorsOutcome(RockPaperScissorsThrow ElfThrow, RockPaperScissorsThrow PlayerThrow)
+    private sealed record RockPaperScissorsOutcome(RockPaperScissorsThrow ElfThrow, RockPaperScissorsThrow PlayerThrow)
     {
         public int ScoreEarned
         {

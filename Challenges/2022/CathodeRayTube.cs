@@ -1,12 +1,9 @@
 ﻿using System.Drawing;
 using System.Text;
-using AdventOfCode.Common;
-using Serilog;
 
-namespace AdventOfCode.Challenges;
+namespace AdventOfCode;
 
-[Challenge("Cathode-Ray Tube", 2022, 10)]
-public sealed class CathodeRayTube : AdventOfCodeChallenge
+public sealed class CathodeRayTube() : AdventOfCodeChallenge("Cathode-Ray Tube", 2022, 10)
 {
     private ICollection<Instruction> _instructions = null!;
 

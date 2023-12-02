@@ -1,11 +1,9 @@
 ﻿using System.Drawing;
-using AdventOfCode.Common;
 using Serilog;
 
-namespace AdventOfCode.Challenges;
+namespace AdventOfCode;
 
-[Challenge("Treetop Tree House", 2022, 08)]
-public sealed class TreetopTreeHouse : AdventOfCodeChallenge
+public sealed class TreetopTreeHouse() : AdventOfCodeChallenge("Treetop Tree House", 2022, 08)
 {
     private Graph<Tree> _trees = null!;
 

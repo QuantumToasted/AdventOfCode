@@ -1,10 +1,8 @@
-﻿using AdventOfCode.Common;
-using Serilog;
+﻿using Serilog;
 
-namespace AdventOfCode.Challenges;
+namespace AdventOfCode;
 
-[Challenge("Supply Stacks", 2022, 05)]
-public sealed class SupplyStacks : AdventOfCodeChallenge
+public sealed class SupplyStacks() : AdventOfCodeChallenge("Supply Stacks", 2022, 05)
 {
     private IReadOnlyList<Stack<char>> _crateStacks = null!;
     private IReadOnlyCollection<SingleCrateMoveInstruction> _part1Instructions = null!;
@@ -72,7 +70,7 @@ public sealed class SupplyStacks : AdventOfCodeChallenge
         return $"The top crates in each stack spell out {topCrates}.";
     }
 
-    private readonly record struct SingleCrateMoveInstruction(int Count, int From, int To)
+    private sealed record SingleCrateMoveInstruction(int Count, int From, int To)
     {
         public void Apply(ref IReadOnlyList<Stack<char>> crateStacks)
         {
@@ -91,7 +89,7 @@ public sealed class SupplyStacks : AdventOfCodeChallenge
         }
     }
     
-    private readonly record struct MultiCrateMoveInstruction(int Count, int From, int To)
+    private sealed record MultiCrateMoveInstruction(int Count, int From, int To)
     {
         public void Apply(ref IReadOnlyList<Stack<char>> crateStacks)
         {

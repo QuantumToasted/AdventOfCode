@@ -1,9 +1,6 @@
-﻿using AdventOfCode.Common;
+﻿namespace AdventOfCode;
 
-namespace AdventOfCode.Challenges;
-
-[Challenge("Rucksack Reorganization", 2022, 03)]
-public sealed class RucksackReorganization : AdventOfCodeChallenge
+public sealed class RucksackReorganization() : AdventOfCodeChallenge("Rucksack Reorganization", 2022, 03)
 {
     private IReadOnlyCollection<Rucksack> _part1Rucksacks = null!;
     private IReadOnlyCollection<Rucksack[]> _part2RucksackGroups = null!;
@@ -44,7 +41,7 @@ public sealed class RucksackReorganization : AdventOfCodeChallenge
         return $"The sum of each group's common item priority is {prioritySum}.";
     }
 
-    private readonly record struct Rucksack(string FullContents)
+    private sealed record Rucksack(string FullContents)
     {
         public const string PRIORITY_STRING = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         public string FirstCompartmentContents => FullContents[..(FullContents.Length / 2)];

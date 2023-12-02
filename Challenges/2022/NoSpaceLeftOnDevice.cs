@@ -1,10 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using AdventOfCode.Common;
 
-namespace AdventOfCode.Challenges;
+namespace AdventOfCode;
 
-[Challenge("No Space Left On Device", 2022, 07)]
-public sealed class NoSpaceLeftOnDevice : AdventOfCodeChallenge
+public sealed class NoSpaceLeftOnDevice() : AdventOfCodeChallenge("No Space Left On Device", 2022, 07)
 {
     private const int FILESYSTEM_MAX_SIZE = 70_000_000;
     private const int UPDATE_REQUIRED_SIZE = 30_000_000;
@@ -85,11 +83,11 @@ public sealed class NoSpaceLeftOnDevice : AdventOfCodeChallenge
         return $"The smallest directory containing enough space to clear up for the update is {smallestDirectorySize} bytes.";
     }
 
-    private readonly record struct File(string Directory, int Size, string Filename)
+    private sealed record File(string Directory, int Size, string Filename)
     {
-        public bool Equals(File other)
+        public bool Equals(File? other)
         {
-            return Directory == other.Directory && Filename == other.Filename;
+            return Directory == other?.Directory && Filename == other.Filename;
         }
 
         public override int GetHashCode()
