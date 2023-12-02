@@ -40,27 +40,27 @@ public sealed class CubeConundrum() : AdventOfCodeChallenge("Cube Conundrum", 20
     {
         public CubeGameResult(ReadOnlySpan<char> rawValue)
         {
-            var breakIndex = 0;
+            var diceStartIndex = 0;
             for (var i = 0; i < rawValue.Length; i++)
             {
                 var id = (int)char.GetNumericValue(rawValue[i]);
                 if (id == -1)
                     continue;
 
-                breakIndex = i;
+                diceStartIndex = i + 3;
 
                 var nextDigit = (int)char.GetNumericValue(rawValue[i + 1]);
                 if (nextDigit != -1)
                 {
                     id = id * 10 + nextDigit;
-                    breakIndex += 1;
+                    diceStartIndex += 1;
                 }
 
                 Id = id;
                 break;
             }
             
-            var indexedValue = rawValue[breakIndex..];
+            var indexedValue = rawValue[diceStartIndex..];
             Span<Range> setRanges = stackalloc Range[indexedValue.Count(";")];
             var setCount = indexedValue.Split(setRanges, ';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
