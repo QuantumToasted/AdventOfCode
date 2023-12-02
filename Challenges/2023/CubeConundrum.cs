@@ -19,7 +19,7 @@ public sealed class CubeConundrum() : AdventOfCodeChallenge("Cube Conundrum", 20
     }
 
     public override string SolvePart2()
-        => "TODO";
+        => $"The sum of the power of all games is {_games.Sum(x => x.Part2Power)}.";
 
     private sealed record CubeGameResult
     {
@@ -85,6 +85,9 @@ public sealed class CubeConundrum() : AdventOfCodeChallenge("Cube Conundrum", 20
                 return true;
             }
         }
+
+        public int Part2Power
+            => Sets.Max(x => x.RedCubes) * Sets.Max(x => x.GreenCubes) * Sets.Max(x => x.BlueCubes);
 
         public void Print()
         {
