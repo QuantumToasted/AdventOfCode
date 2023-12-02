@@ -13,22 +13,7 @@ public sealed class CubeConundrum() : AdventOfCodeChallenge("Cube Conundrum", 20
 
     public override string SolvePart1()
     {
-        var validGames = _games.Where(game =>
-        {
-            foreach (var set in game.Sets)
-            {
-                switch (set.RedCubes, set.GreenCubes, set.BlueCubes)
-                {
-                    case (> 12, _, _):
-                    case (_, > 13, _):
-                    case (_, _, > 14):
-                        game.Print();
-                        return false;
-                }
-            }
-
-            return true;
-        });
+        var validGames = _games.Where(game => game.IsPart1Valid);
 
         return $"The sum of valid games is {validGames.Sum(x => x.Id)}.";
     }
@@ -41,27 +26,27 @@ public sealed class CubeConundrum() : AdventOfCodeChallenge("Cube Conundrum", 20
         public CubeGameResult(ReadOnlySpan<char> rawValue)
         {
             var diceStartIndex = 0;
+            var id = 0;
             for (var i = 0; i < rawValue.Length; i++)
             {
-                var id = (int)char.GetNumericValue(rawValue[i]);
-                if (id == -1)
+                var c = rawValue[i];
+                if (c == ':')
+                {
+                    diceStartIndex = i + 2;
+                    break;
+                }
+                
+                var digit = (int)char.GetNumericValue(rawValue[i]);
+                if (digit == -1)
                     continue;
 
-                diceStartIndex = i + 3;
-
-                var nextDigit = (int)char.GetNumericValue(rawValue[i + 1]);
-                if (nextDigit != -1)
-                {
-                    id = id * 10 + nextDigit;
-                    diceStartIndex += 1;
-                }
-
-                Id = id;
-                break;
+                id = id * 10 + digit;
             }
+
+            Id = id;
             
             var indexedValue = rawValue[diceStartIndex..];
-            Span<Range> setRanges = stackalloc Range[indexedValue.Count(";")];
+            Span<Range> setRanges = stackalloc Range[indexedValue.Count(";") + 1];
             var setCount = indexedValue.Split(setRanges, ';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
             if (setCount <= 0)
@@ -71,7 +56,7 @@ public sealed class CubeConundrum() : AdventOfCodeChallenge("Cube Conundrum", 20
 
             for (var i = 0; i < setCount; i++)
             {
-                sets.Add(new CubeGameSet(indexedValue[setRanges[i]]));
+                sets.Add(new CubeGameSet(this, indexedValue[setRanges[i]]));
             }
 
             Sets = sets;
@@ -80,6 +65,26 @@ public sealed class CubeConundrum() : AdventOfCodeChallenge("Cube Conundrum", 20
         public int Id { get; }
         
         public IReadOnlyList<CubeGameSet> Sets { get; }
+
+        public bool IsPart1Valid
+        {
+            get
+            {
+                foreach (var set in Sets)
+                {
+                    switch (set.RedCubes, set.GreenCubes, set.BlueCubes)
+                    {
+                        case (> 12, _, _):
+                        case (_, > 13, _):
+                        case (_, _, > 14):
+                            Print();
+                            return false;
+                    }
+                }
+
+                return true;
+            }
+        }
 
         public void Print()
         {
@@ -131,31 +136,33 @@ public sealed class CubeConundrum() : AdventOfCodeChallenge("Cube Conundrum", 20
 
     private sealed record CubeGameSet
     {
-        public CubeGameSet(ReadOnlySpan<char> rawValue)
+        private CubeGameResult _parent;
+        
+        public CubeGameSet(CubeGameResult parent, ReadOnlySpan<char> rawValue)
         {
+            _parent = parent;
+            
+            var cubeCount = 0;
             for (var i = 0; i < rawValue.Length; i++)
             {
-                var cubeCount = (int)char.GetNumericValue(rawValue[i]);
-                if (cubeCount == -1)
-                    continue;
+                var c = rawValue[i];
 
-                var nextDigit = (int)char.GetNumericValue(rawValue[i + 1]);
-                if (nextDigit != -1)
+                switch (c)
                 {
-                    i++;
-                    cubeCount = cubeCount * 10 + nextDigit;
-                }
-
-                switch (rawValue[i + 2])
-                {
-                    case 'b': // blue
-                        BlueCubes = cubeCount;
-                        continue;
-                    case 'r': // red
+                    case 'r':
                         RedCubes = cubeCount;
+                        cubeCount = 0;
                         continue;
-                    case 'g': // green
+                    case 'g':
                         GreenCubes = cubeCount;
+                        cubeCount = 0;
+                        continue;
+                    case 'b':
+                        BlueCubes = cubeCount;
+                        cubeCount = 0;
+                        continue;
+                    case var _ when (int) char.GetNumericValue(c) is not -1 and var digit:
+                        cubeCount = cubeCount * 10 + digit;
                         continue;
                 }
             }
