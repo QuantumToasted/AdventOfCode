@@ -56,7 +56,7 @@ public sealed class CubeConundrum() : AdventOfCodeChallenge("Cube Conundrum", 20
 
             for (var i = 0; i < setCount; i++)
             {
-                sets.Add(new CubeGameSet(this, indexedValue[setRanges[i]]));
+                sets.Add(new CubeGameSet(indexedValue[setRanges[i]]));
             }
 
             Sets = sets;
@@ -136,12 +136,8 @@ public sealed class CubeConundrum() : AdventOfCodeChallenge("Cube Conundrum", 20
 
     private sealed record CubeGameSet
     {
-        private CubeGameResult _parent;
-        
-        public CubeGameSet(CubeGameResult parent, ReadOnlySpan<char> rawValue)
+        public CubeGameSet(ReadOnlySpan<char> rawValue)
         {
-            _parent = parent;
-            
             var cubeCount = 0;
             for (var i = 0; i < rawValue.Length; i++)
             {
@@ -152,14 +148,17 @@ public sealed class CubeConundrum() : AdventOfCodeChallenge("Cube Conundrum", 20
                     case 'r':
                         RedCubes = cubeCount;
                         cubeCount = 0;
+                        i += 4; // 'e', 'd', ' '
                         continue;
                     case 'g':
                         GreenCubes = cubeCount;
                         cubeCount = 0;
+                        i += 6; // 'r', 'e', 'e', 'n', ' '
                         continue;
                     case 'b':
                         BlueCubes = cubeCount;
                         cubeCount = 0;
+                        i += 5; // 'l', 'u', 'e', ' '
                         continue;
                     case var _ when (int) char.GetNumericValue(c) is not -1 and var digit:
                         cubeCount = cubeCount * 10 + digit;
