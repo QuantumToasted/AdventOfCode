@@ -115,7 +115,7 @@ public sealed class Graph<T>(T[,] arr) : IEnumerable<(Point Point, T Value)>
                 neighbors.Add(value);
         }
         
-        if (x < _arr.GetLength(0) - 1  && y < _arr.GetLength(1) - 1) // bottom right
+        if (x < _arr.GetLength(0) - 1 && y < _arr.GetLength(1) - 1) // bottom right
         {
             var value = _arr[x + 1, y + 1];
             if (predicate?.Invoke(value) != false)

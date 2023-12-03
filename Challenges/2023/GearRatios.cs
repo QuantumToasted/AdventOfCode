@@ -8,20 +8,6 @@ public sealed class GearRatios() : AdventOfCodeChallenge("Gear Ratios", 2023, 03
     
     public override void LoadData()
     {
-        /*
-         *  var lines = _input.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-        var arr = new Tree[lines.Length, lines[0].Length];
-        for (var x = 0; x < lines.Length; x++)
-        {
-            var line = lines[x];
-            for (var y = 0; y < line.Length; y++)
-            {
-                arr[x, y] = new Tree(int.Parse(line[y].ToString()), new Point(x, y));
-            }
-        }
-
-        _trees = new Graph<Tree>(arr);
-         */
         var lines = _input.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
         var arr = new char[lines.Length, lines[0].Length];
 
@@ -49,7 +35,9 @@ public sealed class GearRatios() : AdventOfCodeChallenge("Gear Ratios", 2023, 03
             if (digit != -1)
             {
                 digits.Add((point, digit));
-                continue;
+                
+                if (point.Y < _graph.GetLength(GraphDimension.Y) - 1)
+                    continue;
             }
 
             if (digits.Count == 0)
@@ -61,7 +49,7 @@ public sealed class GearRatios() : AdventOfCodeChallenge("Gear Ratios", 2023, 03
             foreach (var (p, d) in digits)
             {
                 partNumber = partNumber * 10 + d;
-
+                
                 /*
                 if (!isAdjacentToSymbol)
                 {
