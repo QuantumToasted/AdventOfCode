@@ -25,10 +25,10 @@ public sealed class HillClimbingAlgorithm() : AdventOfCodeChallenge("Hill Climbi
 
     public override string SolvePart1()
     {
-        var s = _map.Single(x => x.Height == 'S');
-        var e = _map.Single(x => x.Height == 'E');
+        var s = _map.Single(x => x.Value.Height == 'S').Value;
+        var e = _map.Single(x => x.Value.Height == 'E').Value;
 
-        var queue = new Queue<HeightPoint>(new[] {s});
+        var queue = new Queue<HeightPoint>(new[] { s });
 
         var previous = new Dictionary<HeightPoint, HeightPoint>();
 
@@ -63,13 +63,13 @@ public sealed class HillClimbingAlgorithm() : AdventOfCodeChallenge("Hill Climbi
 
     public override string SolvePart2()
     {
-        var e = _map.Single(x => x.Height == 'E');
+        var e = _map.Single(x => x.Value.Height == 'E').Value;
 
         var paths = new List<Path>();
 
-        foreach (var p in _map.Where(x => x.Height is 'a' or 'S'))
+        foreach (var p in _map.Where(x => x.Value.Height is 'a' or 'S'))
         {
-            var queue = new Queue<HeightPoint>(new[] {p});
+            var queue = new Queue<HeightPoint>(new[] { p.Value });
             var previous = new Dictionary<HeightPoint, HeightPoint>();
             while (queue.TryDequeue(out var point))
             {
@@ -89,13 +89,13 @@ public sealed class HillClimbingAlgorithm() : AdventOfCodeChallenge("Hill Climbi
 
             var path = new Path(new List<HeightPoint>());
             var current = e;
-            while (!current.Equals(p))
+            while (!current.Equals(p.Value))
             {
                 path.VisitedPoints.Add(current);
                 current = previous[current];
             }
         
-            path.VisitedPoints.Add(p);
+            path.VisitedPoints.Add(p.Value);
             path.VisitedPoints.Reverse();
             
             paths.Add(path);

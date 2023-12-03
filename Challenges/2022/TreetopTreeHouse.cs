@@ -25,14 +25,13 @@ public sealed class TreetopTreeHouse() : AdventOfCodeChallenge("Treetop Tree Hou
 
     public override string SolvePart1()
     {
-        var visibleTrees = _trees.Count(x => x.IsVisibleFromOutside(_trees));
+        var visibleTrees = _trees.Count(x => x.Value.IsVisibleFromOutside(_trees));
         return $"The number of trees fully visible from the outside is {visibleTrees}.";
     }
 
     public override string SolvePart2()
     {
-        var maximumScenicScore = _trees.MaxBy(x => x.GetScenicScore(_trees));
-        
+        var maximumScenicScore = _trees.MaxBy(x => x.Value.GetScenicScore(_trees)).Value;
         return $"The maximum scenic score among all trees is the tree located at {maximumScenicScore.Position} with {maximumScenicScore.GetScenicScore(_trees)}.";
     }
 

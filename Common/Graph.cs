@@ -10,7 +10,7 @@ public enum GraphDimension
     Y
 }
 
-public sealed class Graph<T>(T[,] arr) : IEnumerable<T>
+public sealed class Graph<T>(T[,] arr) : IEnumerable<(Point Point, T Value)>
     where T : struct
 {
     private readonly T[,] _arr = arr;
@@ -54,37 +54,75 @@ public sealed class Graph<T>(T[,] arr) : IEnumerable<T>
 
     public T[] GetCartesianNeighbors(int x, int y, Predicate<T>? predicate = null)
     {
-        var list = new List<T>();
+        var neighbors = new List<T>();
         
         if (y > 0)
         {
             var value = _arr[x, y - 1];
             if (predicate?.Invoke(value) != false)
-                list.Add(value);
+                neighbors.Add(value);
         }
 
         if (y < _arr.GetLength(1) - 1)
         {
             var value = _arr[x, y + 1];
             if (predicate?.Invoke(value) != false)
-                list.Add(value);
+                neighbors.Add(value);
         }
 
         if (x > 0)
         {
             var value = _arr[x - 1, y];
             if (predicate?.Invoke(value) != false)
-                list.Add(value);
+                neighbors.Add(value);
         }
 
         if (x < _arr.GetLength(0) - 1)
         {
             var value = _arr[x + 1, y];
             if (predicate?.Invoke(value) != false)
-                list.Add(value);
+                neighbors.Add(value);
         }
 
-        return list.ToArray();
+        return neighbors.ToArray();
+    }
+
+    public T[] GetAllNeighbors(Point point, Predicate<T>? predicate = null)
+        => GetAllNeighbors(point.X, point.Y, predicate);
+    
+    public T[] GetAllNeighbors(int x, int y, Predicate<T>? predicate = null)
+    {
+        var neighbors = GetCartesianNeighbors(x, y, predicate).ToList();
+
+        if (x > 0 && y > 0) // top left
+        {
+            var value = _arr[x - 1, y - 1];
+            if (predicate?.Invoke(value) != false)
+                neighbors.Add(value);
+        }
+        
+        if (x > 0 && y < _arr.GetLength(1) - 1) // top right
+        {
+            var value = _arr[x - 1, y + 1];
+            if (predicate?.Invoke(value) != false)
+                neighbors.Add(value);
+        }
+        
+        if (x < _arr.GetLength(0) - 1 && y > 0) // bottom left
+        {
+            var value = _arr[x + 1, y - 1];
+            if (predicate?.Invoke(value) != false)
+                neighbors.Add(value);
+        }
+        
+        if (x < _arr.GetLength(0) - 1  && y < _arr.GetLength(1) - 1) // bottom right
+        {
+            var value = _arr[x + 1, y + 1];
+            if (predicate?.Invoke(value) != false)
+                neighbors.Add(value);
+        }
+
+        return neighbors.ToArray();
     }
 
     public int TotalLength => _arr.Length;
@@ -155,7 +193,7 @@ public sealed class Graph<T>(T[,] arr) : IEnumerable<T>
             
             Console.SetCursorPosition(0, 0);
         }
-
+        
         /*
         foreach (var (point, color) in highlightedPoints)
         {
@@ -188,14 +226,25 @@ public sealed class Graph<T>(T[,] arr) : IEnumerable<T>
         //Console.ReadLine();
     }
 
-    public IEnumerator<T> GetEnumerator() => ToEnumerable().GetEnumerator();
+    public IEnumerator<(Point Point, T Value)> GetEnumerator() => ToEnumerable().GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => _arr.GetEnumerator();
 
-    private IEnumerable<T> ToEnumerable()
+    private IEnumerable<(Point Point, T Value)> ToEnumerable()
     {
+        for (var x = 0; x < _arr.GetLength(0); x++)
+        {
+            for (var y = 0; y < _arr.GetLength(1); y++)
+            {
+                var element = _arr[x, y];
+                yield return (new Point(x, y), element);
+            }
+        }
+
+        /*
         foreach (var item in _arr)
             yield return item;
+        */
     }
 
     public static implicit operator T[,](Graph<T> graph) => graph._arr;
