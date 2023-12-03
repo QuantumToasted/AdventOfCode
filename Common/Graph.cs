@@ -49,76 +49,76 @@ public sealed class Graph<T>(T[,] arr) : IEnumerable<(Point Point, T Value)>
         }
     }
 
-    public T[] GetCartesianNeighbors(Point point, Predicate<T>? predicate = null)
+    public T[] GetCartesianNeighbors(Point point, Func<Point, T, bool>? predicate = null)
         => GetCartesianNeighbors(point.X, point.Y, predicate);
 
-    public T[] GetCartesianNeighbors(int x, int y, Predicate<T>? predicate = null)
+    public T[] GetCartesianNeighbors(int x, int y, Func<Point, T, bool>? predicate = null)
     {
         var neighbors = new List<T>();
         
         if (y > 0)
         {
             var value = _arr[x, y - 1];
-            if (predicate?.Invoke(value) != false)
+            if (predicate?.Invoke(new Point(x, y - 1), value) != false)
                 neighbors.Add(value);
         }
 
         if (y < _arr.GetLength(1) - 1)
         {
             var value = _arr[x, y + 1];
-            if (predicate?.Invoke(value) != false)
+            if (predicate?.Invoke(new Point(x, y + 1), value) != false)
                 neighbors.Add(value);
         }
 
         if (x > 0)
         {
             var value = _arr[x - 1, y];
-            if (predicate?.Invoke(value) != false)
+            if (predicate?.Invoke(new Point(x - 1, y), value) != false)
                 neighbors.Add(value);
         }
 
         if (x < _arr.GetLength(0) - 1)
         {
             var value = _arr[x + 1, y];
-            if (predicate?.Invoke(value) != false)
+            if (predicate?.Invoke(new Point(x + 1, y), value) != false)
                 neighbors.Add(value);
         }
 
         return neighbors.ToArray();
     }
 
-    public T[] GetAllNeighbors(Point point, Predicate<T>? predicate = null)
+    public T[] GetAllNeighbors(Point point, Func<Point, T, bool>? predicate = null)
         => GetAllNeighbors(point.X, point.Y, predicate);
     
-    public T[] GetAllNeighbors(int x, int y, Predicate<T>? predicate = null)
+    public T[] GetAllNeighbors(int x, int y, Func<Point, T, bool>? predicate = null)
     {
         var neighbors = GetCartesianNeighbors(x, y, predicate).ToList();
 
         if (x > 0 && y > 0) // top left
         {
             var value = _arr[x - 1, y - 1];
-            if (predicate?.Invoke(value) != false)
+            if (predicate?.Invoke(new Point(x - 1, y - 1), value) != false)
                 neighbors.Add(value);
         }
         
         if (x > 0 && y < _arr.GetLength(1) - 1) // top right
         {
             var value = _arr[x - 1, y + 1];
-            if (predicate?.Invoke(value) != false)
+            if (predicate?.Invoke(new Point(x - 1, y + 1), value) != false)
                 neighbors.Add(value);
         }
         
         if (x < _arr.GetLength(0) - 1 && y > 0) // bottom left
         {
             var value = _arr[x + 1, y - 1];
-            if (predicate?.Invoke(value) != false)
+            if (predicate?.Invoke(new Point(x + 1, y - 1), value) != false)
                 neighbors.Add(value);
         }
         
         if (x < _arr.GetLength(0) - 1 && y < _arr.GetLength(1) - 1) // bottom right
         {
             var value = _arr[x + 1, y + 1];
-            if (predicate?.Invoke(value) != false)
+            if (predicate?.Invoke(new Point(x + 1, y + 1), value) != false)
                 neighbors.Add(value);
         }
 

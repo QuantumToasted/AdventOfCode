@@ -34,7 +34,7 @@ public sealed class HillClimbingAlgorithm() : AdventOfCodeChallenge("Hill Climbi
 
         while (queue.TryDequeue(out var point))
         {
-            foreach (var neighbor in _map.GetCartesianNeighbors(point, x => point.CanTravelTo(x.Height)))
+            foreach (var neighbor in _map.GetCartesianNeighbors(point, (_, x) => point.CanTravelTo(x.Height)))
             {
                 if (previous.ContainsKey(neighbor))
                     continue;
@@ -73,7 +73,7 @@ public sealed class HillClimbingAlgorithm() : AdventOfCodeChallenge("Hill Climbi
             var previous = new Dictionary<HeightPoint, HeightPoint>();
             while (queue.TryDequeue(out var point))
             {
-                foreach (var neighbor in _map.GetCartesianNeighbors(point, x => point.CanTravelTo(x.Height)))
+                foreach (var neighbor in _map.GetCartesianNeighbors(point, (_, x) => point.CanTravelTo(x.Height)))
                 {
                     if (previous.ContainsKey(neighbor))
                         continue;
